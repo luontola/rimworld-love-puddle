@@ -1,13 +1,7 @@
 (ns love-puddle.ui
-  (:require ["@js-temporal/polyfill$Temporal.Instant" :as Instant]
-            [kitchen-async.promise :as p]
+  (:require [clojure.string :as str]
             [reagent.core :as r]
             [reagent.dom :as dom]))
-
-(defn foo [a b]
-  (p/promise [_resolve _reject])
-  (Instant/from "2000-01-01T12:00:00Z")
-  (+ a b))
 
 (def francis-john-example-input
   "FatManSlim, Jerk Dain
@@ -32,6 +26,18 @@ Tautvydas
 ")
 
 (defonce *data (r/atom {:input-text francis-john-example-input}))
+
+(defn input-text->possible-pairs [input]
+  (->> (str/split-lines input)
+       (remove str/blank?)
+       (mapcat (fn [line]
+                 (let [[colonist & partners] (->> (str/split line #",")
+                                                  (map str/trim))]
+                   (if (some? partners)
+                     (map (fn [partner]
+                            #{colonist partner})
+                          partners)
+                     [#{colonist}]))))))
 
 (defn app []
   [:<>
