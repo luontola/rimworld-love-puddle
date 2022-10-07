@@ -57,65 +57,57 @@
                                         #{"C" "D"}]))
         "B and D have only one possible pair, whereas A and C have two possibilities")))
 
-(deftest remove-paired-colonists-test
+(deftest remove-colonists-from-pairs-test
   (testing "empty"
-    (is (= [] (ui/remove-paired-colonists [] [])))
+    (is (= [] (ui/remove-colonists-from-pairs [] [])))
     (is (= [#{"A" "B"}]
-           (ui/remove-paired-colonists []
-                                       [#{"A" "B"}])))
+           (ui/remove-colonists-from-pairs []
+                                           [#{"A" "B"}])))
     (is (= []
-           (ui/remove-paired-colonists [#{"A" "B"}]
-                                       []))))
+           (ui/remove-colonists-from-pairs ["A" "B"]
+                                           []))))
 
-  (testing "removes done pairs"
+  (testing "removes one colonist"
     (is (= [#{"C" "D"}]
-           (ui/remove-paired-colonists [#{"A" "B"}]
-                                       [#{"A" "B"}
-                                        #{"C" "D"}]))))
+           (ui/remove-colonists-from-pairs ["A"]
+                                           [#{"A" "B"}
+                                            #{"C" "D"}]))))
 
-  (testing "removes colonists which are part of done pairs"
+  (testing "removes multiple colonists"
     (is (= [#{"C" "D"}]
-           (ui/remove-paired-colonists [#{"A" "B"}]
-                                       [#{"A" "B"}
-                                        #{"A" "C"}
-                                        #{"B" "C"}
-                                        #{"C" "D"}]))
-        "done pair; removes all pairs which include A or B")
-    (is (= [#{"B" "C"}]
-           (ui/remove-paired-colonists [#{"A"}
-                                        #{"D"}]
-                                       [#{"A" "B"}
-                                        #{"A" "C"}
-                                        #{"B" "C"}
-                                        #{"C" "D"}]))
-        "done solo colonists; removes all pairs which include A or D")))
+           (ui/remove-colonists-from-pairs ["A" "B"]
+                                           [#{"A" "B"}
+                                            #{"A" "C"}
+                                            #{"B" "C"}
+                                            #{"C" "D"}]))
+        "removes all pairs which include A or B")))
 
 (deftest solve-pairs-test
   (testing "empty"
     (is (= {:colonists []
-            :pairs #{}
-            :alone []}
+            :pairs []
+            :alone #{}}
            (ui/solve-pairs {:colonists []
                             :possible-pairs []}))))
 
   (testing "one pair"
     (is (= {:colonists ["A" "B"]
-            :pairs #{#{"A" "B"}}
-            :alone []}
+            :pairs [#{"A" "B"}]
+            :alone #{}}
            (ui/solve-pairs {:colonists ["A" "B"]
                             :possible-pairs [#{"A" "B"}]}))))
 
   (testing "some left alone"
     (is (= {:colonists ["A" "B" "C"]
-            :pairs #{#{"A" "B"}}
-            :alone ["C"]}
+            :pairs [#{"A" "B"}]
+            :alone #{"C"}}
            (ui/solve-pairs {:colonists ["A" "B" "C"]
                             :possible-pairs [#{"A" "B"}]}))))
 
   (testing "multiple pairs (recursion needed)"
     (is (= {:colonists ["A" "B" "C" "D" "E"]
-            :pairs #{#{"A" "D"} #{"B" "C"}}
-            :alone ["E"]}
+            :pairs [#{"B" "C"} #{"A" "D"}]
+            :alone #{"E"}}
            (ui/solve-pairs {:colonists ["A" "B" "C" "D" "E"]
                             :possible-pairs [#{"A" "B"}
                                              #{"A" "D"}

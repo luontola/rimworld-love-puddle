@@ -96,28 +96,33 @@ Daniel Talty, Sarah
               (some most-limited-colonist? pair))
             pairs)))
 
-(defn remove-paired-colonists [done-pairs all-possible-pairs]
-  (let [done-colonists (set (apply concat done-pairs))]
+(defn remove-colonists-from-pairs [colonists pairs]
+  (let [colonists (set colonists)]
     (remove (fn [pair]
-              (some done-colonists pair))
-            all-possible-pairs)))
+              (some colonists pair))
+            pairs)))
 
-(defn solve-pairs [state]
+(defn- solve-pairs-impl [state]
   (if (empty? (:possible-pairs state))
-    (let [paired-colonist? (set (apply concat (:pairs state)))]
-      {:colonists (vec (:colonists state))
-       :pairs (set (:pairs state))
-       :alone (vec (remove paired-colonist? (:colonists state)))})
+    {:colonists (:colonists state)
+     :pairs (:done-pairs state)
+     :alone (:not-paired state)}
     (let [pairs (find-most-limited-pairs (:possible-pairs state))
-          solutions (doall (map (fn [pair]
+          solutions (doall (map (fn recursion [pair]
                                   (-> state
-                                      (update :pairs conj pair)
-                                      (update :possible-pairs #(remove-paired-colonists [pair] %))
-                                      (solve-pairs)))
+                                      (update :done-pairs conj pair)
+                                      (update :not-paired #(set/difference % pair))
+                                      (update :possible-pairs #(remove-colonists-from-pairs pair %))
+                                      (solve-pairs-impl)))
                                 pairs))]
       (->> solutions
            (sort-by #(count (:alone %)))
            (first)))))
+
+(defn solve-pairs [state]
+  (solve-pairs-impl (-> state
+                        (assoc :done-pairs [])
+                        (assoc :not-paired (set (:colonists state))))))
 
 (defn- calculate-solution [data]
   (let [state (parse-input-text (:input-text data))]
