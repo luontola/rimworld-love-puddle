@@ -102,6 +102,23 @@ Daniel Talty, Sarah
               (some done-colonists pair))
             all-possible-pairs)))
 
+(defn solve-pairs [state]
+  (if (empty? (:possible-pairs state))
+    (let [paired-colonist? (set (apply concat (:pairs state)))]
+      {:colonists (vec (:colonists state))
+       :pairs (set (:pairs state))
+       :alone (vec (remove paired-colonist? (:colonists state)))})
+    (let [pairs (find-most-limited-pairs (:possible-pairs state))
+          solutions (doall (map (fn [pair]
+                                  (-> state
+                                      (update :pairs conj pair)
+                                      (update :possible-pairs #(remove-paired-colonists [pair] %))
+                                      (solve-pairs)))
+                                pairs))]
+      (->> solutions
+           (sort-by #(count (:alone %)))
+           (first)))))
+
 
 (defn app []
   [:<>

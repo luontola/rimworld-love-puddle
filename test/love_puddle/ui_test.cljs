@@ -89,3 +89,35 @@
                                         #{"B" "C"}
                                         #{"C" "D"}]))
         "done solo colonists; removes all pairs which include A or D")))
+
+(deftest solve-pairs-test
+  (testing "empty"
+    (is (= {:colonists []
+            :pairs #{}
+            :alone []}
+           (ui/solve-pairs {:colonists []
+                            :possible-pairs []}))))
+
+  (testing "one pair"
+    (is (= {:colonists ["A" "B"]
+            :pairs #{#{"A" "B"}}
+            :alone []}
+           (ui/solve-pairs {:colonists ["A" "B"]
+                            :possible-pairs [#{"A" "B"}]}))))
+
+  (testing "some left alone"
+    (is (= {:colonists ["A" "B" "C"]
+            :pairs #{#{"A" "B"}}
+            :alone ["C"]}
+           (ui/solve-pairs {:colonists ["A" "B" "C"]
+                            :possible-pairs [#{"A" "B"}]}))))
+
+  (testing "multiple pairs (recursion needed)"
+    (is (= {:colonists ["A" "B" "C" "D" "E"]
+            :pairs #{#{"A" "D"} #{"B" "C"}}
+            :alone ["E"]}
+           (ui/solve-pairs {:colonists ["A" "B" "C" "D" "E"]
+                            :possible-pairs [#{"A" "B"}
+                                             #{"A" "D"}
+                                             #{"B" "C"}
+                                             #{"D" "E"}]})))))
