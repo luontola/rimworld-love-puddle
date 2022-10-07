@@ -40,6 +40,27 @@ Tautvydas
                      [#{colonist}]))))
        (distinct)))
 
+(defn find-most-limited-pairs [pairs]
+  (let [colonists (apply concat pairs)
+        colonist->pair-count (reduce (fn [counts pair]
+                                       (if (< 1 (count pair))
+                                         (reduce #(update %1 %2 inc)
+                                                 counts
+                                                 pair)
+                                         counts))
+                                     (zipmap colonists (repeat 0))
+                                     pairs)
+        min-pair-count (apply min (vals colonist->pair-count))
+        most-limited-colonist? (->> colonist->pair-count
+                                    (filter (fn [[_colonist pair-count]]
+                                              (= min-pair-count pair-count)))
+                                    (map first)
+                                    (set))]
+    (filter (fn [pair]
+              (some most-limited-colonist? pair))
+            pairs)))
+
+
 (defn app []
   [:<>
    [:header
