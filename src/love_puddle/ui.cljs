@@ -146,7 +146,11 @@ Daniel Talty, Sarah
 (defn app []
   [:<>
    [:header
-    [:h1 "RimWorld Love Puddle Calculator"]]
+    [:h1 "RimWorld Love Puddle Calculator"]
+    [:p.tagline "Because Francis John had a swinger colony "
+     [:a {:href "https://youtu.be/X2amcS4Isu0?t=4124"}
+      "too big for a spreadsheet"]
+     "."]]
    [:main
     [:p "Enter your RimWorld colony and their relationships into the following text box.
          Each row should start with the name of the colonist, followed by their partners and lovers.
@@ -182,7 +186,10 @@ Daniel Talty, Sarah
          [:h3 "Alone (" (count (:alone solution)) " beds)"]
          (into [:ul]
                (for [alone (:alone solution)]
-                 [:li (str alone)]))]))]])
+                 [:li (str alone)]))]))]
+   [:footer
+    [:p [:a {:href "https://github.com/luontola/rimworld-love-puddle"}
+         "Source code"]]]])
 
 
 (defn init! []

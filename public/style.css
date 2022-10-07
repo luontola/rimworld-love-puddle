@@ -11,3 +11,15 @@ html {
     font-family: "Comic Sans MS", sans-serif;
     font-size: 16px;
 }
+
+header {
+    border-bottom: 1px solid #ccc;
+}
+
+header .tagline {
+    font-style: italic;
+}
+
+footer {
+    border-top: 1px solid #ccc;
+}
