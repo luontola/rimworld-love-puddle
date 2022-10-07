@@ -1,5 +1,6 @@
 (ns love-puddle.ui
-  (:require [clojure.string :as str]
+  (:require [clojure.set :as set]
+            [clojure.string :as str]
             [reagent.core :as r]
             [reagent.dom :as dom]))
 
@@ -49,7 +50,7 @@ Tautvydas, Gus
 Daniel Talty, Sarah
 ")
 
-(defonce *data (r/atom {:input-text francis-john-example-input-v1}))
+(defonce *data (r/atom {:input-text francis-john-example-input-v2}))
 
 (defn parse-input-text [input]
   (let [parsed (->> (str/split-lines input)
@@ -61,15 +62,20 @@ Daniel Talty, Sarah
                               :possible-pairs (map (fn [partner]
                                                      #{colonist partner})
                                                    partners)}))))
-        result (reduce (fn [m1 m2]
-                         (-> m1
-                             (update :colonists concat (:colonists m2))
-                             (update :possible-pairs concat (:possible-pairs m2))))
-                       {:colonists []
-                        :possible-pairs []}
-                       parsed)]
-    (-> result
-        (update :possible-pairs #(distinct (remove nil? %))))))
+        result (-> (reduce (fn [m1 m2]
+                             (-> m1
+                                 (update :colonists concat (:colonists m2))
+                                 (update :possible-pairs concat (:possible-pairs m2))))
+                           {:colonists []
+                            :possible-pairs []}
+                           parsed)
+                   (update :possible-pairs #(distinct (remove nil? %))))
+        listed-colonists (set (:colonists result))
+        paired-colonists (set (apply concat (:possible-pairs result)))
+        unlisted-colonists (set/difference paired-colonists listed-colonists)]
+    (cond-> result
+      (not (empty? unlisted-colonists)) (assoc :error (str "Colonist \"" (first (sort unlisted-colonists))
+                                                           "\" was not mentioned on its own line.")))))
 
 (defn find-most-limited-pairs [pairs]
   (let [colonists (apply concat pairs)

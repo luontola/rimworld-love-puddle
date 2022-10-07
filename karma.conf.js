@@ -10,7 +10,7 @@ module.exports = function (config) {
     client: {
       args: ["shadow.test.karma.init"],
       singleRun: true,
-      captureConsole: false,
+      captureConsole: true,
     }
   })
 };

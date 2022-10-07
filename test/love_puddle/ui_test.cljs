@@ -32,17 +32,15 @@
         "removes duplicates but maintains priority order"))
 
   (testing "error: every colonist must be mentioned on its own row"
-    ; TODO: warning that B not listed
-    #_(is (= {:colonists ["A"]
-              :possible-pairs [#{"A" "B"}]
-              :error "Colonist \"B\" was not mentioned on its own line."}
-             (ui/parse-input-text "A, B")))
-    ; TODO: warning that B and C not listed
-    #_(is (= {:colonists ["A"]
-              :possible-pairs [#{"A" "B"}
-                               #{"A" "C"}]
-              :error "Colonist \"B\" was not mentioned on its own line."}
-             (ui/parse-input-text "A, B, C")))))
+    (is (= {:colonists ["A"]
+            :possible-pairs [#{"A" "B"}]
+            :error "Colonist \"B\" was not mentioned on its own line."}
+           (ui/parse-input-text "A, B")))
+    (is (= {:colonists ["A"]
+            :possible-pairs [#{"A" "B"}
+                             #{"A" "C"}]
+            :error "Colonist \"B\" was not mentioned on its own line."}
+           (ui/parse-input-text "A, B, C")))))
 
 (deftest find-most-limited-pairs-test
   (testing "empty"
