@@ -21,6 +21,6 @@
            (ui/input-text->possible-pairs "A, B, C")))
     (is (= [#{"A" "B"}
             #{"A" "C"}
-            #{"B" "A"}
-            #{"C" "A"}]
-           (ui/input-text->possible-pairs "A, B, C\nB, A\nC, A")))))
+            #{"C" "D"}]
+           (ui/input-text->possible-pairs "A, B, C\nB, A\nC, A, D\nD, C\n"))
+        "removes duplicates but maintains priority order")))

@@ -37,7 +37,8 @@ Tautvydas
                      (map (fn [partner]
                             #{colonist partner})
                           partners)
-                     [#{colonist}]))))))
+                     [#{colonist}]))))
+       (distinct)))
 
 (defn app []
   [:<>
