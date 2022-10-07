@@ -119,6 +119,12 @@ Daniel Talty, Sarah
            (sort-by #(count (:alone %)))
            (first)))))
 
+(defn- calculate-solution [data]
+  (let [state (parse-input-text (:input-text data))]
+    (if (:error state)
+      state
+      (solve-pairs state))))
+
 
 (defn app []
   [:<>
@@ -128,9 +134,33 @@ Daniel Talty, Sarah
     [:p "Enter your RimWorld colony and their relationships into the following text box.
          Each row should start with the name of the colonist, followed by their partners and lovers.
          All names on the same line must be separated by a comma."]
-    [:textarea {:rows 25
-                :cols 80}
-     (str (:input-text @*data))]]])
+    [:p [:textarea {:rows 25
+                    :cols 80
+                    :value (str (:input-text @*data))
+                    :on-change (fn [event]
+                                 (swap! *data assoc :input-text (str (-> event .-target .-value))))}]]
+    [:p [:button {:type "button"
+                  :on-click (fn [_]
+                              (swap! *data dissoc :solution)
+                              (js/setTimeout #(swap! *data assoc :solution (calculate-solution @*data))))}
+         "Calculate solution"]]
+
+    (when-some [solution (:solution @*data)]
+      (if (:error solution)
+        [:h2 "Error: " (str (:error solution))]
+        [:<>
+         [:h2 "Solution"]
+         #_[:p {:style {:white-space "pre-line"}}
+            (str solution)]
+
+         [:h3 "Same bed (" (count (:pairs solution)) " beds)"]
+         (into [:ul]
+               (for [pair (:pairs solution)]
+                 [:li (str/join " ❤️ " pair)]))
+         [:h3 "Alone (" (count (:alone solution)) " beds)"]
+         (into [:ul]
+               (for [alone (:alone solution)]
+                 [:li (str alone)]))]))]])
 
 
 (defn init! []
