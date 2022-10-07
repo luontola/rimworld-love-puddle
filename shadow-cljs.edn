@@ -1,0 +1,16 @@
+{:lein {:profile "+cljs"}
+ :dev-http {8080 "public"}
+
+ :builds
+ {:frontend {:target :browser
+             :output-dir "public/js"
+             :modules {:main {:entries [kata.ui]}}
+             :compiler-options {:source-map true}}
+  :test {:target :browser-test
+         :test-dir "target/cljs-test"
+         :ns-regexp "-test$"
+         :devtools {:http-port 8021
+                    :http-root "target/cljs-test"}}
+  :karma {:target :karma
+          :output-to "target/karma/test.js"
+          :ns-regexp "-test$"}}}

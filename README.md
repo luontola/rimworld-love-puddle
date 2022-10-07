@@ -1,6 +1,6 @@
-# Empty Clojure Project
+# Empty ClojureScript Project
 
-Something to get quickly started with Clojure for a code kata or similar.
+Something to get quickly started with ClojureScript for a code kata or similar.
 
 ## Requirements
 
@@ -17,18 +17,28 @@ Something to get quickly started with Clojure for a code kata or similar.
 
 ## Useful commands
 
+Install dependencies
+
+    npm install
+
 Run tests when files are changed
 
-    lein kaocha --watch
+    npm run autobuild:karma
+    npm run autotest:karma
 
-Start a REPL
+Start dev server
 
-    lein repl
+    npm run start
+    open http://localhost:8080/
 
-Build an uberjar for distribution
+Build for distribution
 
-    lein uberjar
+    rm -rf public/js
+    npm run release
+    cp -a public ...
 
 Upgrade dependencies
 
     lein ancient upgrade :all :check-clojure :no-tests
+    npm run outdated
+    npm run upgrade

@@ -1,0 +1,26 @@
+{
+  "name": "new-clojurescript-project",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "shadow-cljs watch frontend",
+    "release": "shadow-cljs release frontend",
+    "test": "shadow-cljs compile karma && karma start --single-run",
+    "autobuild:karma": "shadow-cljs watch karma",
+    "autotest:karma": "karma start",
+    "outdated": "npm-check-updates",
+    "upgrade": "npm-check-updates --interactive"
+  },
+  "dependencies": {
+    "@js-temporal/polyfill": "^0.4.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "karma": "^6.4.1",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-cljs-test": "^0.1.0",
+    "npm-check-updates": "^16.3.8",
+    "shadow-cljs": "^2.20.2"
+  }
+}

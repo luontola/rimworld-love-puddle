@@ -5,7 +5,10 @@
 /.lein-*
 /.lsp/
 /.nrepl-port
+/.shadow-cljs/
 /.vscode/
+/node_modules/
 /pom.xml
 /pom.xml.asc
+/public/js/
 /target/
