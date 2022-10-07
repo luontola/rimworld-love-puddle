@@ -4,7 +4,7 @@
  :builds
  {:frontend {:target :browser
              :output-dir "public/js"
-             :modules {:main {:entries [kata.ui]}}
+             :modules {:main {:entries [love-puddle.ui]}}
              :compiler-options {:source-map true}}
   :test {:target :browser-test
          :test-dir "target/cljs-test"

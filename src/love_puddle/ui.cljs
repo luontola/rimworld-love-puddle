@@ -1,4 +1,4 @@
-(ns kata.ui
+(ns love-puddle.ui
   (:require ["@js-temporal/polyfill$Temporal.Instant" :as Instant]
             [kitchen-async.promise :as p]
             [reagent.core :as r]
@@ -15,7 +15,7 @@
 (defn app []
   [:<>
    [:header
-    [:h1 "New ClojureScript Project"]]
+    [:h1 "RimWorld Love Puddle Calculator"]]
    [:main
     [:p "Hello " @*data]]])
 

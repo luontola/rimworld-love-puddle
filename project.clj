@@ -1,4 +1,4 @@
-(defproject new-clojurescript-project "0.1.0-SNAPSHOT"
+(defproject rimworld-love-puddle "0.1.0-SNAPSHOT"
 
   :dependencies [[com.google.javascript/closure-compiler-unshaded "v20220803"]
                  [medley "1.4.0"]
