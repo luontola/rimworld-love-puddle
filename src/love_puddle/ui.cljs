@@ -60,6 +60,12 @@ Tautvydas
               (some most-limited-colonist? pair))
             pairs)))
 
+(defn remove-paired-colonists [done-pairs all-possible-pairs]
+  (let [done-colonists (set (apply concat done-pairs))]
+    (remove (fn [pair]
+              (some done-colonists pair))
+            all-possible-pairs)))
+
 
 (defn app []
   [:<>
