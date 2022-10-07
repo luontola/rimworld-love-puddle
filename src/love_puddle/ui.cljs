@@ -124,11 +124,23 @@ Daniel Talty, Sarah
                         (assoc :done-pairs [])
                         (assoc :not-paired (set (:colonists state))))))
 
+(defn sort-solution [solution]
+  (let [colonist-priority (zipmap (:colonists solution) (range))
+        pair-priority (fn [[colonist-1 colonist-2]]
+                        (min (colonist-priority colonist-1)
+                             (colonist-priority colonist-2)))]
+    (-> solution
+        (update :pairs (fn [pairs]
+                         (->> pairs
+                              (map #(sort-by colonist-priority %))
+                              (sort-by pair-priority))))
+        (update :alone #(sort-by colonist-priority %)))))
+
 (defn- calculate-solution [data]
   (let [state (parse-input-text (:input-text data))]
     (if (:error state)
       state
-      (solve-pairs state))))
+      (sort-solution (solve-pairs state)))))
 
 
 (defn app []
@@ -138,7 +150,8 @@ Daniel Talty, Sarah
    [:main
     [:p "Enter your RimWorld colony and their relationships into the following text box.
          Each row should start with the name of the colonist, followed by their partners and lovers.
-         All names on the same line must be separated by a comma."]
+         All names on the same line must be separated by a comma.
+         The algorithm will try to give priority to those first in the list."]
     [:p [:textarea {:rows 25
                     :cols 80
                     :value (str (:input-text @*data))
@@ -151,7 +164,8 @@ Daniel Talty, Sarah
                               (swap! *data dissoc :solution)
                               (js/setTimeout (fn []
                                                (swap! *data assoc :solution (calculate-solution @*data))
-                                               (swap! *data dissoc :calculating))))}
+                                               (swap! *data dissoc :calculating))
+                                             100))}
          "Calculate solution"]]
 
     (when-some [solution (:solution @*data)]
@@ -161,7 +175,6 @@ Daniel Talty, Sarah
          [:h2 "Solution"]
          #_[:p {:style {:white-space "pre-line"}}
             (str solution)]
-
          [:h3 "Same bed (" (count (:pairs solution)) " beds)"]
          (into [:ul]
                (for [pair (:pairs solution)]

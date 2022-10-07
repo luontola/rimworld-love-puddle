@@ -113,3 +113,13 @@
                                              #{"A" "D"}
                                              #{"B" "C"}
                                              #{"D" "E"}]})))))
+
+(deftest sort-solution-test
+  (testing "sorts :pairs and :alone according to the order of :colonists"
+    (is (= {:colonists ["A" "B" "C" "D" "E" "F"]
+            :pairs [["A" "D"]
+                    ["B" "C"]]
+            :alone ["E" "F"]}
+           (ui/sort-solution {:colonists ["A" "B" "C" "D" "E" "F"]
+                              :pairs [#{"B" "C"} #{"A" "D"}]
+                              :alone #{"F" "E"}})))))
