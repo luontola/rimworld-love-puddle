@@ -49,29 +49,35 @@ Tautvydas, Gus
 Daniel Talty, Sarah
 ")
 
-(defonce *data (r/atom {:input-text francis-john-example-input-v2}))
+(defonce *data (r/atom {:input-text francis-john-example-input-v1}))
 
-(defn input-text->possible-pairs [input]
-  (->> (str/split-lines input)
-       (remove str/blank?)
-       (mapcat (fn [line]
-                 (let [[colonist & partners] (->> (str/split line #",")
-                                                  (map str/trim))]
-                   (if (some? partners)
-                     (map (fn [partner]
-                            #{colonist partner})
-                          partners)
-                     [#{colonist}]))))
-       (distinct)))
+(defn parse-input-text [input]
+  (let [parsed (->> (str/split-lines input)
+                    (remove str/blank?)
+                    (map (fn [line]
+                           (let [[colonist & partners] (->> (str/split line #",")
+                                                            (map str/trim))]
+                             {:colonists [colonist]
+                              :possible-pairs (map (fn [partner]
+                                                     #{colonist partner})
+                                                   partners)}))))
+        result (reduce (fn [m1 m2]
+                         (-> m1
+                             (update :colonists concat (:colonists m2))
+                             (update :possible-pairs concat (:possible-pairs m2))))
+                       {:colonists []
+                        :possible-pairs []}
+                       parsed)]
+    (-> result
+        (update :possible-pairs #(distinct (remove nil? %))))))
 
 (defn find-most-limited-pairs [pairs]
   (let [colonists (apply concat pairs)
         colonist->pair-count (reduce (fn [counts pair]
-                                       (if (< 1 (count pair))
-                                         (reduce #(update %1 %2 inc)
-                                                 counts
-                                                 pair)
-                                         counts))
+                                       (assert (= 2 (count pair)))
+                                       (reduce #(update %1 %2 inc)
+                                               counts
+                                               pair))
                                      (zipmap colonists (repeat 0))
                                      pairs)
         min-pair-count (apply min (vals colonist->pair-count))

@@ -4,37 +4,49 @@
 
 (deftest input-text->possible-pairs-test
   (testing "empty"
-    (is (= [] (ui/input-text->possible-pairs ""))))
+    (is (= {:colonists []
+            :possible-pairs []}
+           (ui/parse-input-text ""))))
 
   (testing "only lonely colonists"
-    (is (= [#{"A"}]
-           (ui/input-text->possible-pairs "A")))
-    (is (= [#{"A"}
-            #{"B"}]
-           (ui/input-text->possible-pairs "A\nB\n"))))
+    (is (= {:colonists ["A"]
+            :possible-pairs []}
+           (ui/parse-input-text "A")))
+    (is (= {:colonists ["A" "B"]
+            :possible-pairs []}
+           (ui/parse-input-text "A\nB\n"))))
 
   (testing "paired colonists"
-    (is (= [#{"A" "B"}]
-           (ui/input-text->possible-pairs "A, B")))
-    (is (= [#{"A" "B"}
-            #{"A" "C"}]
-           (ui/input-text->possible-pairs "A, B, C")))
-    (is (= [#{"A" "B"}
-            #{"A" "C"}
-            #{"C" "D"}]
-           (ui/input-text->possible-pairs "A, B, C\nB, A\nC, A, D\nD, C\n"))
-        "removes duplicates but maintains priority order")))
+    (is (= {:colonists ["A" "B"]
+            :possible-pairs [#{"A" "B"}]}
+           (ui/parse-input-text "A, B\nB, A\n")))
+    (is (= {:colonists ["A" "B" "C"]
+            :possible-pairs [#{"A" "B"}
+                             #{"A" "C"}]}
+           (ui/parse-input-text "A, B, C\nB, A\nC, A\n")))
+    (is (= {:colonists ["A" "B" "C" "D"]
+            :possible-pairs [#{"A" "B"}
+                             #{"A" "C"}
+                             #{"C" "D"}]}
+           (ui/parse-input-text "A, B, C\nB, A\nC, A, D\nD, C\n"))
+        "removes duplicates but maintains priority order"))
+
+  (testing "error: every colonist must be mentioned on its own row"
+    ; TODO: warning that B not listed
+    #_(is (= {:colonists ["A"]
+              :possible-pairs [#{"A" "B"}]
+              :error "Colonist \"B\" was not mentioned on its own line."}
+             (ui/parse-input-text "A, B")))
+    ; TODO: warning that B and C not listed
+    #_(is (= {:colonists ["A"]
+              :possible-pairs [#{"A" "B"}
+                               #{"A" "C"}]
+              :error "Colonist \"B\" was not mentioned on its own line."}
+             (ui/parse-input-text "A, B, C")))))
 
 (deftest find-most-limited-pairs-test
   (testing "empty"
     (is (= [] (ui/find-most-limited-pairs []))))
-
-  (testing "solo is more limiting that one pair"
-    (is (= [#{"C"}
-            #{"D"}]
-           (ui/find-most-limited-pairs [#{"A" "B"}
-                                        #{"C"}
-                                        #{"D"}]))))
 
   (testing "one pair is more limiting that multiple pairs"
     (is (= [#{"A" "B"}]
