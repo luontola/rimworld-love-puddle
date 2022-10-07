@@ -140,9 +140,13 @@ Daniel Talty, Sarah
                     :on-change (fn [event]
                                  (swap! *data assoc :input-text (str (-> event .-target .-value))))}]]
     [:p [:button {:type "button"
+                  :disabled (:calculating @*data)
                   :on-click (fn [_]
+                              (swap! *data assoc :calculating true)
                               (swap! *data dissoc :solution)
-                              (js/setTimeout #(swap! *data assoc :solution (calculate-solution @*data))))}
+                              (js/setTimeout (fn []
+                                               (swap! *data assoc :solution (calculate-solution @*data))
+                                               (swap! *data dissoc :calculating))))}
          "Calculate solution"]]
 
     (when-some [solution (:solution @*data)]
