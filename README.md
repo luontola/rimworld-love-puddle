@@ -1,7 +1,7 @@
 # RimWorld Love Puddle Calculator
 
 Solves the problem of who to put in bed with who, without needing a spreadsheet.
-See [Francis John's Rimworld Sea Ice Ep 23](https://www.youtube.com/watch?v=X2amcS4Isu0&t=1420s).
+See [Francis John's Rimworld Sea Ice Ep 23](https://youtu.be/X2amcS4Isu0?t=4124).
 
 ## Requirements
 

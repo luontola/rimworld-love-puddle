@@ -3,7 +3,8 @@
             [reagent.core :as r]
             [reagent.dom :as dom]))
 
-(def francis-john-example-input
+;; Example data from https://youtu.be/X2amcS4Isu0?t=1420
+(def francis-john-example-input-v1
   "FatManSlim, Jerk Dain
 Jerk Dain, FatManSlim, Unbreakable, Simao, Valiant
 Unbreakable, Jerk Dain
@@ -25,7 +26,30 @@ Daniel Talty
 Tautvydas
 ")
 
-(defonce *data (r/atom {:input-text francis-john-example-input}))
+;; Example data from https://youtu.be/X2amcS4Isu0?t=4124
+(def francis-john-example-input-v2
+  "FatManSlim, Jerk Dain
+Jerk Dain, FatManSlim, Unbreakable, Simao, Valiant
+Unbreakable, Jerk Dain, InTern Zero
+Simao, Jerk Dain, Charlie
+Valiant, Jerk Dain, Tree, D. Delair, Darrell, Charlie
+Tree, Valiant
+D. Delair, Valiant, Jeremy, Gus
+Jeremy, D. Delair
+Gus, D. Delair, Casey, Charlie, Tautvydas
+Charlie, Gus, Simao, Valiant
+Casey, Gus, Sarah, Ralph
+Sarah, Casey, InTern Zero, Daniel Talty
+Ralph, Casey, Darrell
+InTern Zero, Sarah, Unbreakable
+Darrell, Ralph, Pietromassimo, Valiant
+Pietromassimo, Darrell, GreyGhost
+GreyGhost, Pietromassimo
+Tautvydas, Gus
+Daniel Talty, Sarah
+")
+
+(defonce *data (r/atom {:input-text francis-john-example-input-v2}))
 
 (defn input-text->possible-pairs [input]
   (->> (str/split-lines input)
