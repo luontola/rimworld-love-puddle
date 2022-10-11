@@ -108,6 +108,8 @@ Daniel Talty, Sarah
      :pairs (:done-pairs state)
      :alone (:not-paired state)}
     (let [pairs (find-most-limited-pairs (:possible-pairs state))
+          ;; TODO: Is it enough to just choose the first most limited pair, or is there a special case
+          ;;       where it's not optimal? That would help reduce this algorithm from O(n!) to O(n).
           solutions (doall (map (fn recursion [pair]
                                   (-> state
                                       (update :done-pairs conj pair)
